@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Apple Picking Post</title>
+<style>
+  :root {
+    --W: 1080px;
+    --H: 1440px;
+    --brand: #8dc63f;
+    --ink: #fff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: var(--W); height: var(--H); background: #000; overflow: hidden; }
+  body {
+    font-family: "Inter Display", "Inter", system-ui, sans-serif;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    font-feature-settings: "cv05", "ss03";
+  }
+  .post { position: relative; width: var(--W); height: var(--H); overflow: hidden; }
+  .layer { position: absolute; inset: 0; width: var(--W); height: var(--H); }
+
+  /* legibility scrims, kept soft so the photo still breathes */
+  .scrim {
+    background:
+      linear-gradient(180deg, rgba(10,20,8,.42) 0%, rgba(10,20,8,.12) 26%, rgba(0,0,0,0) 42%),
+      linear-gradient(0deg, rgba(8,10,6,.55) 0%, rgba(8,10,6,.18) 22%, rgba(0,0,0,0) 34%),
+      radial-gradient(120% 90% at 50% 45%, rgba(0,0,0,0) 60%, rgba(0,0,0,.22) 100%);
+  }
+
+  /* ---------- status row ---------- */
+  .wordmark {
+    position: absolute; left: 56px; top: 60px; height: 56px;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,.25));
+  }
+  .pill {
+    position: absolute; right: 56px; top: 59px; height: 58px;
+    padding: 0 26px 0 22px; border-radius: 29px;
+    display: flex; align-items: center; gap: 12px;
+    font: 600 25px/1 "Inter Display", "Inter", sans-serif; letter-spacing: -.005em;
+  }
+  .dot {
+    width: 14px; height: 14px; border-radius: 50%; background: #a6f05a;
+    box-shadow: 0 0 0 5px rgba(166,240,90,.22), 0 0 16px rgba(166,240,90,.9);
+  }
+
+  /* ---------- lock-screen date line ---------- */
+  .dateline {
+    position: absolute; left: 0; right: 0; top: 166px; text-align: center;
+    font: 600 40px/1 "Inter Display", "Inter", sans-serif; letter-spacing: -.01em;
+    color: rgba(255,255,255,.94);
+    text-shadow: 0 2px 14px rgba(0,0,0,.25);
+  }
+
+  /* ---------- widget ---------- */
+  .widget {
+    position: absolute; left: 44px; right: 44px; top: 1138px; height: 254px;
+    padding: 30px 32px 32px 34px;
+  }
+  .w-head { display: flex; align-items: center; gap: 16px; height: 52px; }
+  .appicon {
+    width: 52px; height: 52px; border-radius: 14px;
+    background: linear-gradient(160deg, #24452a 0%, #102615 100%);
+    display: grid; place-items: center;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.14), 0 4px 12px rgba(0,0,0,.25);
+  }
+  .appicon img { width: 42px; }
+  .w-app { font: 600 24px/1 "Inter", sans-serif; letter-spacing: .06em; text-transform: uppercase; color: rgba(255,255,255,.78); }
+  
+  .w-body { margin-top: 24px; }
+  .w-title { font: 700 56px/1.02 "Inter Display", "Inter", sans-serif; letter-spacing: -.025em; }
+  .w-meta { display: flex; gap: 26px; margin-top: 16px; font: 500 29px/1 "Inter", sans-serif; color: rgba(255,255,255,.86); letter-spacing: -.01em; }
+  .w-meta span { display: inline-flex; align-items: center; gap: 10px; }
+  .w-meta svg { width: 28px; height: 28px; flex: none; }
+
+  .cal {
+    width: 138px; height: 138px; border-radius: 34px; flex: none;
+    background: rgba(255,255,255,.96);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.6);
+    color: #111;
+    position: absolute; right: 32px; top: 58px;
+  }
+  .cal b { font: 600 22px/1 "Inter", sans-serif; letter-spacing: .04em; color: #ff3b30; }
+  .cal i { font: 300 80px/0.9 "Inter Display", sans-serif; font-style: normal; letter-spacing: -.04em; margin-top: 4px; }
+
+  canvas.layer { pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="post" id="post">
+  <img class="layer" src="assets/photo.jpg" alt="">
+  <div class="layer scrim"></div>
+  <canvas class="layer" id="headline"></canvas>
+  <img class="layer" src="assets/subject.png" alt="">
+  <canvas class="layer" id="glass"></canvas>
+
+  <img class="wordmark" src="assets/wordmark.png" alt="Mountain Rangers">
+  <div class="pill glass" data-shape="capsule"><span class="dot"></span>Upcoming hike</div>
+
+  <div class="dateline" id="dateline">Sunday 18 October</div>
+
+  <div class="widget glass" data-radius="58">
+    <div class="w-head">
+      <div class="appicon"><img src="assets/emblem.png" alt=""></div>
+      <div class="w-app">Mountain Rangers</div>
+    </div>
+    <div class="w-body">
+      <div>
+        <div class="w-title">Hike &amp; Apple Picking</div>
+        <div class="w-meta">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21.5s-7-6.1-7-11.6A7 7 0 0 1 19 9.9c0 5.5-7 11.6-7 11.6Z" fill="rgba(255,255,255,.92)"/><circle cx="12" cy="9.8" r="2.6" fill="#3a4a2c"/></svg>
+            Baskinta, Mount Lebanon
+          </span>
+        </div>
+      </div>
+      <div class="cal"><b id="cal-dow">SUN</b><i id="cal-day">18</i></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---------- tweakables ----------
+const HEADLINE = ["APPLE", "PICKING"];
+const HEAD_TOP = 238, HEAD_BOTTOM = 704, HEAD_MAX_W = 850, HEAD_GAP = 24;
+const S = window.devicePixelRatio || 1;
+const W = 1080, H = 1440;
+
+const load = src => new Promise((ok, err) => { const i = new Image(); i.onload = () => ok(i); i.onerror = err; i.src = src; });
+const mk = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+
+// Edge-extended, blurred copy of the photo that glass samples from.
+function backdrop(photo, blur, extra) {
+  const P = 160;
+  const pad = mk((W + 2 * P) * S, (H + 2 * P) * S), p = pad.getContext('2d');
+  const X = P * S, Y = P * S, w = W * S, h = H * S, e = P * S;
+  p.drawImage(photo, X, Y, w, h);
+  p.drawImage(photo, 0, 0, W, 1, X, 0, w, e);
+  p.drawImage(photo, 0, H - 1, W, 1, X, Y + h, w, e);
+  p.drawImage(photo, 0, 0, 1, H, 0, Y, e, h);
+  p.drawImage(photo, W - 1, 0, 1, H, X + w, Y, e, h);
+  p.drawImage(photo, 0, 0, 1, 1, 0, 0, e, e);
+  p.drawImage(photo, W - 1, 0, 1, 1, X + w, 0, e, e);
+  p.drawImage(photo, 0, H - 1, 1, 1, 0, Y + h, e, e);
+  p.drawImage(photo, W - 1, H - 1, 1, 1, X + w, Y + h, e, e);
+  const out = mk(pad.width, pad.height), o = out.getContext('2d');
+  o.filter = `blur(${blur * S}px) ${extra}`;
+  o.drawImage(pad, 0, 0);
+  return { data: o.getImageData(0, 0, out.width, out.height).data, w: out.width, off: P * S };
+}
+
+// Apple-style continuous ("squircle") corners, PaintCode approximation.
+function squircle(ctx, x, y, w, h, r) {
+  r = Math.min(r, Math.min(w, h) / 2 / 1.528665);
+  const a = 1.528665 * r, b = 1.088493 * r, c = 0.868407 * r, d = 0.631494 * r, e = 0.074911 * r, f = 0.372824 * r, g = 0.169059 * r;
+  const X = x + w, Y = y + h;
+  ctx.moveTo(x + a, y);
+  ctx.lineTo(X - a, y);
+  ctx.bezierCurveTo(X - b, y, X - c, y, X - d, y + e);
+  ctx.bezierCurveTo(X - f, y + g, X - g, y + f, X - e, y + d);
+  ctx.bezierCurveTo(X, y + c, X, y + b, X, y + a);
+  ctx.lineTo(X, Y - a);
+  ctx.bezierCurveTo(X, Y - b, X, Y - c, X - e, Y - d);
+  ctx.bezierCurveTo(X - g, Y - f, X - f, Y - g, X - d, Y - e);
+  ctx.bezierCurveTo(X - c, Y, X - b, Y, X - a, Y);
+  ctx.lineTo(x + a, Y);
+  ctx.bezierCurveTo(x + b, Y, x + c, Y, x + d, Y - e);
+  ctx.bezierCurveTo(x + f, Y - g, x + g, Y - f, x + e, Y - d);
+  ctx.bezierCurveTo(x, Y - c, x, Y - b, x, Y - a);
+  ctx.lineTo(x, y + a);
+  ctx.bezierCurveTo(x, y + b, x, y + c, x + e, y + d);
+  ctx.bezierCurveTo(x + g, y + f, x + f, y + g, x + d, y + e);
+  ctx.bezierCurveTo(x + c, y, x + b, y, x + a, y);
+  ctx.closePath();
+}
+
+// Liquid Glass: refract a blurred backdrop through the shape's bevel,
+// add chromatic fringing, tint, and a specular rim lit from the top-left.
+function liquidGlass(target, drawShape, src, o) {
+  const cw = W * S, ch = H * S;
+  const mask = mk(cw, ch), m = mask.getContext('2d');
+  m.scale(S, S); m.fillStyle = '#fff'; drawShape(m);
+  const height = (sigma) => {
+    const c = mk(cw, ch), x = c.getContext('2d');
+    x.filter = `blur(${sigma * S}px)`; x.drawImage(mask, 0, 0);
+    return x.getImageData(0, 0, cw, ch).data;
+  };
+  const A = m.getImageData(0, 0, cw, ch).data;
+  const Hw = height(o.bezel), Hr = height(o.rim);
+
+  // shadow first, so the glass sits on it
+  const t = target.getContext('2d');
+  t.save();
+  t.shadowColor = o.shadow[0]; t.shadowBlur = o.shadow[1] * S; t.shadowOffsetY = o.shadow[2] * S;
+  t.globalAlpha = o.shadow[3];
+  // draw the shape off-canvas so only its shadow lands (no white halo under anti-aliased edges)
+  t.shadowOffsetX = 4 * cw;
+  t.drawImage(mask, -4 * cw, 0);
+  t.restore();
+
+  const out = t.createImageData(cw, ch), D = out.data;
+  const kW = o.bezel * S * 2.5 / 255, kR = o.rim * S * 2.5 / 255;
+  const L = [-0.55, -0.83];                 // light from upper-left
+  const sw = src.w, so = src.off, sd = src.data;
+  const sample = (x, y, ch) => {
+    let xi = Math.round(x) + so, yi = Math.round(y) + so;
+    return sd[(yi * sw + xi) * 4 + ch];
+  };
+  for (let y = 1; y < ch - 1; y++) {
+    for (let x = 1; x < cw - 1; x++) {
+      const i = (y * cw + x) * 4, a = A[i + 3];
+      if (!a) continue;
+      // wide bevel → refraction
+      const gx = (Hw[i + 7] - Hw[i - 1]) * 0.5 * kW, gy = (Hw[i + cw * 4 + 3] - Hw[i - cw * 4 + 3]) * 0.5 * kW;
+      // thin bevel → specular rim
+      const rx = (Hr[i + 7] - Hr[i - 1]) * 0.5 * kR, ry = (Hr[i + cw * 4 + 3] - Hr[i - cw * 4 + 3]) * 0.5 * kR;
+      const k = o.refract * S;
+      const r = sample(x - gx * k * 1.00, y - gy * k * 1.00, 0);
+      const g = sample(x - gx * k * 0.93, y - gy * k * 0.93, 1);
+      const b = sample(x - gx * k * 0.86, y - gy * k * 0.86, 2);
+      // outward normal is -gradient; rim lit where it faces the light, softer kick on the far side
+      const rm = Math.min(1, Math.hypot(rx, ry));
+      const nl = rm > 1e-4 ? (-rx * L[0] - ry * L[1]) / Math.hypot(rx, ry) : 0;
+      const spec = rm * (o.rimBase + o.rimKey * Math.max(0, nl) + o.rimBack * Math.max(0, -nl));
+      const wm = Math.min(1, Math.hypot(gx, gy));
+      const glow = wm * o.edgeGlow;
+      const tA = o.tint[3];
+      let R = (r * o.gain) * (1 - tA) + o.tint[0] * tA;
+      let G = (g * o.gain) * (1 - tA) + o.tint[1] * tA;
+      let B = (b * o.gain) * (1 - tA) + o.tint[2] * tA;
+      const add = 255 * (spec + glow);
+      D[i] = Math.min(255, R + add);
+      D[i + 1] = Math.min(255, G + add);
+      D[i + 2] = Math.min(255, B + add);
+      D[i + 3] = a;
+    }
+  }
+  const tmp = mk(cw, ch); tmp.getContext('2d').putImageData(out, 0, 0);
+  t.drawImage(tmp, 0, 0);
+}
+
+(async () => {
+  await document.fonts.load('700 200px "Inter Display"');
+  await document.fonts.ready;
+  const photo = await load('assets/photo.jpg');
+  await Promise.all([...document.images].map(i => i.decode().catch(() => {})));
+
+  for (const id of ['headline', 'glass']) {
+    const c = document.getElementById(id); c.width = W * S; c.height = H * S;
+  }
+
+  // ---- headline: frosted glass letters, stretched like the iOS lock-screen clock ----
+  const lightSrc = backdrop(photo, 6, 'saturate(1.0) brightness(1.45)');
+  const drawHeadline = (ctx) => {
+    ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+    let fs = 260;
+    ctx.font = `700 ${fs}px "Inter Display"`;
+    const widest = Math.max(...HEADLINE.map(s => ctx.measureText(s).width));
+    fs = fs * HEAD_MAX_W / widest;
+    ctx.font = `700 ${fs}px "Inter Display"`;
+    const cap = ctx.measureText('H').actualBoundingBoxAscent;
+    const lineH = (HEAD_BOTTOM - HEAD_TOP - HEAD_GAP * (HEADLINE.length - 1)) / HEADLINE.length;
+    const sy = lineH / cap;
+    HEADLINE.forEach((s, n) => {
+      const base = HEAD_TOP + lineH * (n + 1) + HEAD_GAP * n;
+      ctx.save(); ctx.translate(W / 2, base); ctx.scale(1, sy);
+      ctx.fillText(s, 0, 0);
+      ctx.restore();
+    });
+  };
+  liquidGlass(document.getElementById('headline'), drawHeadline, lightSrc, {
+    bezel: 7, rim: 0.9, refract: 10, gain: 1.0, tint: [255, 255, 255, 0.62],
+    rimBase: 0.0, rimKey: 0.85, rimBack: 0.14, edgeGlow: 0.12,
+    shadow: ['rgba(0,0,0,1)', 46, 14, 0.30],
+  });
+
+  // ---- panels ----
+  const panelSrc = backdrop(photo, 22, 'saturate(1.7) brightness(0.92)');
+  const post = document.getElementById('post').getBoundingClientRect();
+  for (const el of document.querySelectorAll('.glass')) {
+    const r = el.getBoundingClientRect();
+    const x = r.left - post.left, y = r.top - post.top;
+    const capsule = el.dataset.shape === 'capsule';
+    liquidGlass(document.getElementById('glass'), (ctx) => {
+      ctx.beginPath();
+      if (capsule) ctx.roundRect(x, y, r.width, r.height, r.height / 2);
+      else squircle(ctx, x, y, r.width, r.height, +el.dataset.radius);
+      ctx.fill();
+    }, panelSrc, {
+      bezel: capsule ? 9 : 16, rim: 1.2, refract: capsule ? 22 : 40, gain: capsule ? 0.66 : 0.84, tint: [255, 255, 255, capsule ? 0.06 : 0.10],
+      rimBase: 0.10, rimKey: 0.75, rimBack: 0.45, edgeGlow: 0.06,
+      shadow: ['rgba(0,0,0,1)', 60, 22, 0.22],
+    });
+  }
+  document.body.dataset.ready = '1';
+})();
+</script>
+</body>
+</html>
