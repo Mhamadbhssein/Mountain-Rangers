@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Apple Picking Post</title>
+<link rel="stylesheet" href="../shared/base.css">
+<style>
+  :root { --W: 1080px; --H: 1440px; }
+  .wordmark { left: 56px; top: 60px; height: 56px; }
+  .pill { right: 56px; top: 59px; }
+  .dateline { top: 166px; }
+  .widget { left: 44px; right: 44px; top: 1138px; height: 254px; }
+  .cal { position: absolute; right: 32px; top: 58px; }
+</style>
+</head>
+<body>
+<div class="post" id="post">
+  <img class="layer" src="assets/photo.jpg" alt="">
+  <div class="layer scrim"></div>
+  <canvas class="layer" id="headline"></canvas>
+  <img class="layer" src="assets/subject.png" alt="">
+  <canvas class="layer" id="glass"></canvas>
+
+  <img class="wordmark" src="assets/wordmark.png" alt="Mountain Rangers">
+  <div class="pill glass" data-shape="capsule"><span class="dot"></span>Upcoming hike</div>
+
+  <div class="dateline" id="dateline">Sunday 18 October</div>
+
+  <div class="widget glass" data-radius="58">
+    <div class="w-head">
+      <div class="appicon"><img src="assets/emblem.png" alt=""></div>
+      <div class="w-app">Mountain Rangers</div>
+    </div>
+    <div class="w-body">
+      <div>
+        <div class="w-title">Hike &amp; Apple Picking</div>
+        <div class="w-meta">
+          <span>
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 21.5s-7-6.1-7-11.6A7 7 0 0 1 19 9.9c0 5.5-7 11.6-7 11.6Z" fill="rgba(255,255,255,.92)"/><circle cx="12" cy="9.8" r="2.6" fill="#3a4a2c"/></svg>
+            Baskinta, Mount Lebanon
+          </span>
+        </div>
+      </div>
+      <div class="cal"><b id="cal-dow">SUN</b><i id="cal-day">18</i></div>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/glass.js"></script>
+<script>
+const HEADLINE = ["APPLE", "PICKING"];
+const G = Glass(1080, 1440);
+
+(async () => {
+  await G.ready();
+  const photo = await G.load('assets/photo.jpg');
+  G.sizeCanvases('headline', 'glass');
+  G.glassText(document.getElementById('headline'), HEADLINE,
+    { top: 238, bottom: 704, maxW: 850, gap: 24 },
+    G.backdrop(photo, 6, 'saturate(1.0) brightness(1.45)'));
+  G.glassPanels(document.getElementById('glass'), document.getElementById('post'),
+    G.backdrop(photo, 22, 'saturate(1.7) brightness(0.92)'));
+  document.body.dataset.ready = '1';
+})();
+</script>
+</body>
+</html>
